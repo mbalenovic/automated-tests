@@ -1,0 +1,405 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>reveal.js</title>
+
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/black.css">
+
+	<!-- Theme used for syntax highlighted code -->
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<a href="https://revealjs.com">
+					<img src="./assets/automation_bots.png" alt="reveal.js logo"
+						style="height: 280px; width: 500px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+				</a>
+				<h3>Automatizirani testovi</h3>
+				<small>
+					<p>Mile Balenovic</p>
+				</small>
+				</p>
+			</section>
+
+			<section>
+				<h2>
+					Agenda
+				</h2>
+				<ul>
+					<li>Testiranje</li>
+					<li>Cypress</li>
+					<li>Cypress testovi</li>
+					<li>Erste primjer</li>
+				</ul>
+			</section>
+
+			<section>
+				<section>
+					<img src="./assets/test.jpg" alt="reveal.js logo" style="height: 400px;" class="demo-logo">
+				</section>
+				<section>
+					<img src="./assets/test_pyramid.jpg" alt="test pyramid" style="height: 400px" />
+					<aside class="notes">
+						<ul>
+							<li>E2E - robot koji se ponasa kao user i klika po appu s ciljem da provjeri da sve radi</li>
+							<li>Integration - provjera nekoliko unita zajedno. i tu se izbjegava mockanje, ugl se mockaju samo network
+								req - RTL</li>
+							<li> Unit - provjera izoliranog dijela, base komponente - RTL</li>
+							<li>Static - tipfeleri i type greske za vrijeme pisanja koda - TS, ESLint</li>
+							<li>vrijeme, novac, odrzavanje</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h2>Alati</h2>
+					<ul>
+						<li>Cypress</li>
+						<li>Playwright</li>
+						<li>Selenium</li>
+						<li>Jest</li>
+						<li>React-Testing-Library</li>
+						<li>ESLint, TypeScript</li>
+					</ul>
+					<aside class="notes">
+						cypress od ova tri navedena jedini pokrece testove u samom browseru i obzirom na godine, najbolji community
+						i
+						dokumentacija
+						sto vise testovi oponasaju nacin na koji user koristi app, to nam pruzaju vise pouzdanja u app
+					</aside>
+				</section>
+
+			</section>
+
+			<section>
+				<section data-background="#dddddd">
+					<img src="./assets/cypress_logo.png" alt="test pyramid" style="height: auto" />
+				</section>
+				<section>
+					<ul>
+						<li>open source</li>
+						<li>pouzdan i brz</li>
+						<li>debugging</li>
+						<li>dokumentacija</li>
+						<li>setup</li>
+						<li>video i image recording</li>
+					</ul>
+
+					<aside class="notes">
+						pouzdan - runa u browseru
+						debugging - timetravel
+						setup - tu je bilo nekih poteskoca, ali je to bilo vezano za virtualku
+						limitacije - ne moze vise browsera od jednom, niti vise tabova
+					</aside>
+				</section>
+				<section data-background-iframe="https://npmtrends.com/@testing-library/react-vs-cypress-vs-playwright"
+					data-background-interactive>
+				</section>
+			</section>
+
+
+			</section>
+
+			<section>
+				<section>
+					<img src="./assets/example.jpg" alt="reveal.js logo"
+						style="height: 400px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+				</section>
+
+				<section>
+					<h3>Naredbe</h3>
+					<pre><code class="javascript"  class="hljs" data-trim data-line-numbers="0|1|3|5|7|9|">
+						cy.COMMAND
+
+						cy.visit('/home')
+
+						cy.get('h1')
+						
+						cy.get('button').click()
+
+						cy.get('button').click().should('have.class', 'active')
+						</code></pre>
+
+					<aside class="notes">
+						<ul>
+							<li>1. cy sadrzi sve metode koje koristimo, ali se mogu importati i neke druge kao iz RTL</li>
+							<li>7. chaining - nema spremanja subjekata u varijable zbog asinkronosti</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<table style="font-size: 22px;">
+						<thead>
+							<tr>
+								<th>Selector</th>
+								<th>Recommended</th>
+								<th>Notes</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><code>cy.get('button').click()</code></td>
+								<td>Never</td>
+								<td>Worst - too generic, no context.</td>
+							</tr>
+							<tr>
+								<td><code>cy.get('.btn.btn-large').click()</code></td>
+								<td>Never</td>
+								<td>Bad. Coupled to styling. Highly subject to change.</td>
+							</tr>
+							<tr>
+								<td><code>cy.get('#main').click()</code></td>
+								<td>Sparingly</td>
+								<td>Better. But still coupled to styling or JS event listeners.</td>
+							</tr>
+							<tr>
+								<td><code>cy.get('[name="submission"]').click()</code></td>
+								<td>Sparingly</td>
+								<td>Coupled to the <code>name</code> attribute which has HTML semantics.</td>
+							</tr>
+							<tr>
+								<td><code>cy.contains('Submit').click()</code></td>
+								<td>Depends</td>
+								<td>Much better. But still coupled to text content that may change.</td>
+							</tr>
+							<tr>
+								<td><code>cy.get('[data-cy="submit"]').click()</code></td>
+								<td>Always</td>
+								<td>Best. Isolated from all changes.</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section>
+					<h3>Chaining</h3>
+					<pre><code class="javascript" class="hljs" data-trim data-trim data-line-numbers="|1|2|3|">
+						cy.request('/users/1')
+							.its('body')
+							.should('deep.eql', {name: 'Marko'})
+						</code></pre>
+
+					<aside class="notes">
+						<ul>
+							<li>formatira se linija ispod linije</li>
+							<li>napredniji primjer, ali poanta chaining</li>
+							<li>api request, dohvacanje body-a i testiranje podataka</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Test #1</h3>
+					<pre><code class="javascript" class="hljs" data-trim data-line-numbers="1|2|3|5|7|">
+						describe('My First Test', () => {
+							it('clicks the link "type"', () => {
+								cy.visit('https://example.cypress.io')
+						
+								cy.contains('type').click()
+
+								cy.url().should('include', '/commands')
+							})
+						})
+						</code></pre>
+					<aside class="notes">
+						<ul>
+							<li>describe - sto testiramo/grupiranje test caseova, mogu se koristiti hookovi</li>
+							<li>it sadrzi individualne testove</li>
+							<li>visit - go to</li>
+							<li>contains - element koji ima tekst type</li>
+							<li>AAA - spomenuti sto je sto</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h3>AAA - arrange, act, assert</h3>
+					<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|3|4|5|6|7|3|4-6|7">
+						describe('My Second Test', () => {
+							it('User login', () => {
+								cy.visit('/login')
+								cy.get('[data-cy=username]').type('mvertus')
+								cy.get('[data-cy=password]').type('12345')
+								cy.get('[data-cy=submit_btn]').click()
+								cy.url().should('contain', '/login-successful')
+							})
+						})
+					</code></pre>
+
+					<aside class="notes">
+						<ul>
+							<li>arrange</li>
+							<li>act</li>
+							<li>assert</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Recap</h3>
+					<ul>
+						<li>Pouzdanost selectora</li>
+						<li>Chaining</li>
+						<li>AAA - arrange, act, assert</li>
+						<li><a href="https://example.cypress.io/">Cypress example</a></li>
+						<li><a href="https://github.com/cypress-io/cypress-realworld-app">Cypress Real World App</a></li>
+					</ul>
+				</section>
+			</section>
+
+			<section>
+				<section>
+					<img src="./assets/erste.jpg" alt="reveal.js logo"
+						style="height: 400px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+				</section>
+
+				<section>
+					<h3>Programski login</h3>
+					<pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|2|3|5|6|7|">
+						it('successfully logs in programmatically', () => {
+							cy.intercept('GET', `${Cypress.env('apiUrl')}v1/SmsServiceOverview`).as('getSmsServices');
+							cy.login();
+						
+							cy.visit('/usluge');
+							cy.wait('@getSmsServices').then(() => {
+								cy.contains('p', 'Ugovorene SMS usluge');
+							});
+						});
+				</code></pre>
+
+					<aside class="notes">
+						provjera da smo se uspjesno programski logirali - cy.login nam preko API odraduje login
+					</aside>
+				</section>
+
+				<section>
+					<h3>Cypress.env.json</h3>
+					<pre data-id="code-animation"><code class="hljs">
+						{
+							"apiUrl": "https://localhost:7058/api/",
+							"username": "19026128854",
+							"password": "666666"
+						}
+				</code></pre>
+					<aside class="notes">
+						<ul>
+							<li>podaci za testiranje</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Ugovaranje Erste SMS usluge</h3>
+					<img src="./assets/erste_sms_service.png" alt="reveal.js logo"
+						style="width: 45%; height: 500px; margin: 0; background: transparent;" class="demo-logo">
+				</section>
+
+				<section>
+					<h3>Ugovaranje Erste SMS usluge</h3>
+					<pre data-id="code-animation"><code class="hljs" style="font-size: 16px;line-height: 1.2" data-trim data-line-numbers="|3|4-12|13|15|16|17-35|36-61|17-18|19-27|29|30|32|33|37-53|54|55|57|58|">
+					describe('ErsteSmsServiceActivation', () => {
+						it('form interaction', () => {
+							cy.login();
+							cy.intercept('GET', `${Cypress.env('apiUrl')}v1/SmsServiceRequest?accountNumber=`).as(
+								'getSmsServiceRequest'
+							);
+							cy.intercept('POST', `${Cypress.env('apiUrl')}v1/SmsServiceRequest/verification`).as(
+								'verifySmsServiceRequest'
+							);
+							cy.intercept('POST', `${Cypress.env('apiUrl')}v1/SmsServiceRequest/request`).as(
+								'postSmsServiceRequest'
+							);
+							cy.visit('/usluge/ugovaranje-sms-usluge');
+					
+							cy.wait('@getSmsServiceRequest').then(() => {
+								cy.get('[data-testid=changeButton]').then(($button) => {
+									// check if service activated by checking button text
+									if ($button.text().includes('Promijeni')) {
+										cy.findByRole('button', { name: /promijeni/i }).click();
+										cy.findByText(
+											/podaci o trenutnom stanju na računu/i
+										).click();
+										cy.findByText(
+											/poruka o trenutnom stanju na računu pojedinačno/i
+										).click();
+										cy.findByRole('textbox', { name: /broj mobilnog telefona/i }).clear();
+										cy.findByRole('button', { name: /provjeri/i }).click();
+					
+										cy.wait('@verifySmsServiceRequest').then(() => {
+											cy.findByRole('button', { name: /potvrdi/i }).click();
+					
+											cy.wait('@postSmsServiceRequest').then(() => {
+												cy.findByText(/erste sms usluga je ažurirana\./i);
+											});
+										});
+									} else {
+										cy.findByText(
+											/podaci o trenutnom stanju na računu/i
+										).click();
+										cy.findByText(
+											/poruka o trenutnom stanju na računu nakon pojedinačno/i
+										).click();
+										cy.findByRole('textbox', { name: /uplata u iznosu/i }).type(
+											'500'
+										);
+										cy.findByRole('textbox', { name: /isplata u iznosu/i }).type(
+											'500'
+										);
+										cy.findByRole('textbox', { name: /broj mobilnog telefona/i }).type('91912912');
+										cy.findByText(/prihvaćam/i).click();
+					
+										cy.findByRole('button', { name: /provjeri/i }).click();
+					
+										cy.wait('@verifySmsServiceRequest').then(() => {
+											cy.findByRole('button', { name: /potvrdi/i }).click();
+					
+											cy.wait('@postSmsServiceRequest').then(() => {
+												cy.findByText(/erste sms usluga je ažurirana\./i);
+											});
+										});
+									}
+								});
+							});
+						});
+					});
+			</code></pre>
+				</section>
+
+				<section>
+					<h3 class="r-fit-text">Live VDI</h3>
+				</section>
+			</section>
+
+			<section>
+				<p class="r-fit-text">expect(PITANJA).to.equal(true)</p>
+			</section>
+		</div>
+	</div>
+
+	<script src="dist/reveal.js"></script>
+	<script src="plugin/notes/notes.js"></script>
+	<script src="plugin/markdown/markdown.js"></script>
+	<script src="plugin/highlight/highlight.js"></script>
+	<script>
+		// More info about initialization & config:
+		// - https://revealjs.com/initialization/
+		// - https://revealjs.com/config/
+		Reveal.initialize({
+			hash: true,
+
+			// Learn about plugins: https://revealjs.com/plugins/
+			plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+		});
+	</script>
+</body>
+
+</html>
